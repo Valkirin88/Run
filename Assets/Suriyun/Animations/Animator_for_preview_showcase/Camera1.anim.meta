@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 819b8cc24a4a8b449885d7c2957e4e0a
+timeCreated: 1500049378
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Camera1.anim
+  uploadId: 688166

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8d2df61cff2a95844a1f551e797c57ee
+timeCreated: 1499513549
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Characters/Materials/Hamsto05.mat
+  uploadId: 688166

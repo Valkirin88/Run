@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 437ea257e0b3e994092e393e43c9112d
+timeCreated: 1500040377
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Run.controller
+  uploadId: 688166

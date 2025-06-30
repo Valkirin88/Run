@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ac2507c05b214a042af6ea8b2f1e2c38
+timeCreated: 1500017655
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Characters/Prefab/Hamsto08.prefab
+  uploadId: 688166

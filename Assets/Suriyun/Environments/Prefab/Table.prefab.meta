@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3d8842b97dec05040a7b54bb61340362
+timeCreated: 1500012794
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Environments/Prefab/Table.prefab
+  uploadId: 688166

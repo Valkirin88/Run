@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 381f62841ee570e4686e3ce5c10ba94f
+timeCreated: 1500048433
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/CarouselA.controller
+  uploadId: 688166

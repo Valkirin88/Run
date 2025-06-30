@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7ad335b949736884b908f9a9863f62d1
+timeCreated: 1500040377
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Idle_B.controller
+  uploadId: 688166

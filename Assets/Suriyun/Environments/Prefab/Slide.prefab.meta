@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c0f0c5314cc17fe488dac3f329506503
+timeCreated: 1500008332
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Environments/Prefab/Slide.prefab
+  uploadId: 688166

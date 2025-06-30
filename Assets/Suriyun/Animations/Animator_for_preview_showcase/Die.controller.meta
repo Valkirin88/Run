@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 04fd3a367df13b042a7880f221d12e7a
+timeCreated: 1500040377
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Die.controller
+  uploadId: 688166

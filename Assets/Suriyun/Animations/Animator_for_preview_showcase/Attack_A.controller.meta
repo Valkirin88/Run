@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6cadecb9ce3f2034d9dbf1f3517a7fb2
+timeCreated: 1500040377
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Attack_A.controller
+  uploadId: 688166

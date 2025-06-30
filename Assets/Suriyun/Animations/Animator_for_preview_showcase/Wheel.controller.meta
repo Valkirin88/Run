@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f78e2b65d310f274da86b8cccbb50e5c
+timeCreated: 1500012855
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Wheel.controller
+  uploadId: 688166

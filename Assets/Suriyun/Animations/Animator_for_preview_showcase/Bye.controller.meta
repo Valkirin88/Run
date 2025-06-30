@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b3c36895c2f2f7842b9ee49ee6a91e3a
+timeCreated: 1500040377
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Bye.controller
+  uploadId: 688166

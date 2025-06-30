@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3d71de6e5e91e8f4e9d3897deb98b804
+timeCreated: 1500049397
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Animations/Animator_for_preview_showcase/Main Camera.controller
+  uploadId: 688166

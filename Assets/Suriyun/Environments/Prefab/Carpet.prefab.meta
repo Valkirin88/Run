@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b8058dafdb37310469eae2c31278b489
+timeCreated: 1500007702
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Environments/Prefab/Carpet.prefab
+  uploadId: 688166

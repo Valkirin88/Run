@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bff88578f35218448bc5958412c08671
+timeCreated: 1500007728
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95596
+  packageName: Hamsto
+  packageVersion: 3.0
+  assetPath: Assets/Suriyun/Environments/Prefab/Minihome.prefab
+  uploadId: 688166
