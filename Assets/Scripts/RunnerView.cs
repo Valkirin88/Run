@@ -1,8 +1,8 @@
 using System;
-using Unity.VisualScripting;
+using Mirror;
 using UnityEngine;
 
-public class RunnerView : MonoBehaviour
+public class RunnerView : NetworkBehaviour
 {
     public event Action OnGrounded;
     public event Action OnGroundLeft;
@@ -53,9 +53,10 @@ public class RunnerView : MonoBehaviour
 
     public void Jump()
     {
-        Debug.Log("Jump");
+        Vector3 velocity = _rigidbody.linearVelocity;
+        velocity.y = 0f;
+        _rigidbody.linearVelocity = velocity;
+         
         _rigidbody.AddForce(Vector3.up * _jumpVelocity);
-        // var jumpPosition = new Vector3(transform.position.x, transform.position.y +1f, transform.position.z);
-        // transform.position = Vector3.MoveTowards(transform.position, jumpPosition, _jumpVelocity);
     }
 }

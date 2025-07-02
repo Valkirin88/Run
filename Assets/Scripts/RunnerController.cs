@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class RunnerController : IDisposable
@@ -36,6 +35,7 @@ public class RunnerController : IDisposable
     {
         if (_runnerView.IsGrounded)
         {
+            Debug.Log("Jump controller");
             _runnerView.Jump();
             _runnerView.IsJumped = true;
             _runnerView.IsGrounded = false;
