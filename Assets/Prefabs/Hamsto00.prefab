@@ -734,7 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 0
+  GlobalObjectIdHash: 1966279041
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -777,9 +777,9 @@ MonoBehaviour:
   IsGrounded: 0
   IsJumped: 0
   _rigidbody: {fileID: 1831647243198016345}
-  _directVelocity: 5
-  _jumpVelocity: 10
-  _horizontalVelocity: 5
+  _directVelocity: 50
+  _jumpVelocity: 5
+  _horizontalVelocity: 50
   playerRenderer: {fileID: 0}
   animationSync: {fileID: 0}
 --- !u!114 &3699188925085367244

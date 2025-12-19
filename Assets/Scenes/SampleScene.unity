@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8648e9282d3c745981e0b1f4468683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MatchmakingUI
+  matchmaking: {fileID: 1797012023}
   menuPanel: {fileID: 0}
   playButton: {fileID: 901238755}
   cancelButton: {fileID: 0}
@@ -361,8 +362,6 @@ MonoBehaviour:
   - {fileID: 810885121}
   - {fileID: 982675695}
   - {fileID: 2074198200}
-  spawnRadius: 5
-  spawnHeight: 1
 --- !u!1 &127600813
 GameObject:
   m_ObjectHideFlags: 0
@@ -5206,7 +5205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1471220829
 Transform:
   m_ObjectHideFlags: 0
@@ -5629,6 +5628,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8fcc4bd6e04fb4f85bd2e5f821a170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1617300803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617300805}
+  - component: {fileID: 1617300804}
+  m_Layer: 0
+  m_Name: SpawnPointManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1617300804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617300803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed6b294ec862a49489688675b199337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnPointManager
+  spawnPoints:
+  - {fileID: 2131386332}
+  - {fileID: 810885121}
+  - {fileID: 982675695}
+  - {fileID: 2074198200}
+--- !u!4 &1617300805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617300803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.39785, y: -0.09122, z: -6.56471}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1638773509
 GameObject:
   m_ObjectHideFlags: 0
@@ -6189,6 +6237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1714e25348a7f49895944074e82402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoMatchmaking
+  relayManager: {fileID: 512462834}
   maxPlayersPerLobby: 4
   lobbyUpdateInterval: 1.5
   gameMode: FreeForAll
@@ -7224,3 +7273,4 @@ SceneRoots:
   - {fileID: 194596195}
   - {fileID: 26008327}
   - {fileID: 837336975}
+  - {fileID: 1617300805}

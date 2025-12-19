@@ -8,6 +8,9 @@ using TMPro;
 /// </summary>
 public class MatchmakingUI : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private AutoMatchmaking matchmaking;
+
     [Header("UI Elements")]
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private Button playButton;
@@ -17,7 +20,6 @@ public class MatchmakingUI : MonoBehaviour
 
     private void Start()
     {
-        // Setup buttons
         if (playButton != null)
             playButton.onClick.AddListener(OnPlayClicked);
 
@@ -27,11 +29,10 @@ public class MatchmakingUI : MonoBehaviour
             cancelButton.gameObject.SetActive(false);
         }
 
-        // Subscribe to events
-        if (AutoMatchmaking.Instance != null)
+        if (matchmaking != null)
         {
-            AutoMatchmaking.Instance.OnStatusChanged += OnStatusChanged;
-            AutoMatchmaking.Instance.OnPlayerCountChanged += OnPlayerCountChanged;
+            matchmaking.OnStatusChanged += OnStatusChanged;
+            matchmaking.OnPlayerCountChanged += OnPlayerCountChanged;
         }
 
         UpdateUI("Готов к игре", 0);
@@ -39,20 +40,19 @@ public class MatchmakingUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (AutoMatchmaking.Instance != null)
+        if (matchmaking != null)
         {
-            AutoMatchmaking.Instance.OnStatusChanged -= OnStatusChanged;
-            AutoMatchmaking.Instance.OnPlayerCountChanged -= OnPlayerCountChanged;
+            matchmaking.OnStatusChanged -= OnStatusChanged;
+            matchmaking.OnPlayerCountChanged -= OnPlayerCountChanged;
         }
     }
 
     private void OnPlayClicked()
     {
-        if (AutoMatchmaking.Instance != null)
+        if (matchmaking != null)
         {
-            AutoMatchmaking.Instance.StartQuickMatch();
+            matchmaking.StartQuickMatch();
             
-            // Show cancel button during search
             if (playButton != null)
                 playButton.gameObject.SetActive(false);
             
@@ -63,11 +63,10 @@ public class MatchmakingUI : MonoBehaviour
 
     private async void OnCancelClicked()
     {
-        if (AutoMatchmaking.Instance != null)
+        if (matchmaking != null)
         {
-            await AutoMatchmaking.Instance.LeaveLobby();
+            await matchmaking.LeaveLobby();
             
-            // Show play button again
             if (playButton != null)
                 playButton.gameObject.SetActive(true);
             

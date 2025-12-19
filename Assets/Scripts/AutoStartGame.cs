@@ -1,61 +1,49 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
-/// Автоматически запускает игру когда подключится минимум игроков
-/// Блокирует управление до начала игры
+/// Ожидает пока подключатся все игроки, затем включает их одновременно
+/// Игроки спавнятся автоматически через NetworkManager, но отключены до старта
 /// </summary>
 public class AutoStartGame : NetworkBehaviour
 {
-    public static AutoStartGame Instance { get; private set; }
-
     [Header("Game Settings")]
-    [SerializeField] private int minPlayersToStart = 2; // Минимум игроков для старта
-    [SerializeField] private float countdownTime = 3f; // Обратный отсчёт перед стартом
+    [SerializeField] private int minPlayersToStart = 2;
+    [SerializeField] private float countdownTime = 3f;
     
     [Header("UI - Waiting Screen")]
-    [SerializeField] private GameObject waitingPanel; // Панель ожидания
-    [SerializeField] private TMP_Text waitingStatusText; // Текст статуса
-    [SerializeField] private TMP_Text playerCountText; // Счётчик игроков
-    [SerializeField] private TMP_Text countdownText; // Текст обратного отсчёта
+    [SerializeField] private GameObject waitingPanel;
+    [SerializeField] private TMP_Text waitingStatusText;
+    [SerializeField] private TMP_Text playerCountText;
+    [SerializeField] private TMP_Text countdownText;
 
-    // События
     public event Action OnGameStarted;
-    public event Action<int> OnPlayerCountChanged;
 
-    private NetworkVariable<int> networkedPlayerCount = new NetworkVariable<int>(0);
-    private NetworkVariable<bool> networkedGameStarted = new NetworkVariable<bool>(false);
-    private NetworkVariable<float> networkedCountdown = new NetworkVariable<float>(-1f);
+    private NetworkVariable<int> netPlayerCount = new NetworkVariable<int>(0);
+    private NetworkVariable<bool> netGameStarted = new NetworkVariable<bool>(false);
+    private NetworkVariable<float> netCountdown = new NetworkVariable<float>(-1f);
 
-    private bool localGameStarted = false;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
+    private List<ulong> connectedClients = new List<ulong>();
+    private Dictionary<ulong, NetworkObject> playerObjects = new Dictionary<ulong, NetworkObject>();
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-        // Подписываемся на изменения NetworkVariables
-        networkedPlayerCount.OnValueChanged += OnPlayerCountChangedCallback;
-        networkedGameStarted.OnValueChanged += OnGameStartedCallback;
-        networkedCountdown.OnValueChanged += OnCountdownChanged;
-
+        
+        // Подписываемся на изменения NetworkVariables (для клиентов)
+        netPlayerCount.OnValueChanged += OnPlayerCountChanged;
+        netGameStarted.OnValueChanged += OnGameStartedChanged;
+        netCountdown.OnValueChanged += OnCountdownChanged;
+        
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-            
-            // Хост = первый игрок
-            networkedPlayerCount.Value = 1;
         }
-
-        // Показываем экран ожидания
+        
         ShowWaitingScreen();
         UpdateUI();
     }
@@ -63,11 +51,11 @@ public class AutoStartGame : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-
-        networkedPlayerCount.OnValueChanged -= OnPlayerCountChangedCallback;
-        networkedGameStarted.OnValueChanged -= OnGameStartedCallback;
-        networkedCountdown.OnValueChanged -= OnCountdownChanged;
-
+        
+        netPlayerCount.OnValueChanged -= OnPlayerCountChanged;
+        netGameStarted.OnValueChanged -= OnGameStartedChanged;
+        netCountdown.OnValueChanged -= OnCountdownChanged;
+        
         if (IsServer && NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
@@ -77,12 +65,14 @@ public class AutoStartGame : NetworkBehaviour
 
     private void Update()
     {
-        // Обновляем обратный отсчёт на сервере
-        if (IsServer && networkedCountdown.Value > 0)
+        if (!IsServer) return;
+        
+        // Обратный отсчёт
+        if (netCountdown.Value > 0 && !netGameStarted.Value)
         {
-            networkedCountdown.Value -= Time.deltaTime;
+            netCountdown.Value -= Time.deltaTime;
 
-            if (networkedCountdown.Value <= 0)
+            if (netCountdown.Value <= 0)
             {
                 StartGameNow();
             }
@@ -93,66 +83,127 @@ public class AutoStartGame : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        networkedPlayerCount.Value++;
-        Debug.Log($"✅ Игрок {clientId} подключился! Всего: {networkedPlayerCount.Value}/{minPlayersToStart}");
+        // Защита от дублирования
+        if (connectedClients.Contains(clientId))
+            return;
 
-        // Проверяем достаточно ли игроков для старта
+        connectedClients.Add(clientId);
+        netPlayerCount.Value = connectedClients.Count;
+        
+        Debug.Log($"✅ Игрок {clientId} подключился! Всего: {connectedClients.Count}/{minPlayersToStart}");
+
+        // Ищем объект игрока (он появится через кадр)
+        StartCoroutine(FindAndDisablePlayer(clientId));
+
         CheckStartConditions();
+    }
+
+    private System.Collections.IEnumerator FindAndDisablePlayer(ulong clientId)
+    {
+        // Ждём пока игрок заспавнится
+        yield return new WaitForSeconds(0.1f);
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            if (client.PlayerObject != null)
+            {
+                playerObjects[clientId] = client.PlayerObject;
+                
+                // Если игра ещё не началась - отключаем игрока
+                if (!netGameStarted.Value)
+                {
+                    SetPlayerActive(client.PlayerObject, false);
+                    Debug.Log($"⏸ Игрок {clientId} отключён до старта игры");
+                }
+            }
+        }
     }
 
     private void OnClientDisconnected(ulong clientId)
     {
         if (!IsServer) return;
 
-        networkedPlayerCount.Value--;
-        Debug.Log($"❌ Игрок {clientId} отключился. Всего: {networkedPlayerCount.Value}");
+        connectedClients.Remove(clientId);
+        playerObjects.Remove(clientId);
+        netPlayerCount.Value = connectedClients.Count;
+        
+        Debug.Log($"❌ Игрок {clientId} отключился. Всего: {connectedClients.Count}");
 
-        // Если обратный отсчёт шёл и игроков стало мало - отменяем
-        if (networkedCountdown.Value > 0 && networkedPlayerCount.Value < minPlayersToStart)
+        // Отменяем отсчёт если игроков мало
+        if (netCountdown.Value > 0 && connectedClients.Count < minPlayersToStart)
         {
-            networkedCountdown.Value = -1f;
-            Debug.Log("⏸ Обратный отсчёт отменён - недостаточно игроков");
+            netCountdown.Value = -1f;
+            Debug.Log("⏸ Обратный отсчёт отменён");
         }
     }
 
     private void CheckStartConditions()
     {
-        if (networkedGameStarted.Value) return;
+        if (netGameStarted.Value) return;
 
-        if (networkedPlayerCount.Value >= minPlayersToStart)
+        if (connectedClients.Count >= minPlayersToStart)
         {
-            // Запускаем обратный отсчёт
-            networkedCountdown.Value = countdownTime;
+            netCountdown.Value = countdownTime;
             Debug.Log($"⏱ Начинаем обратный отсчёт: {countdownTime} секунд!");
         }
     }
 
     private void StartGameNow()
     {
-        if (networkedGameStarted.Value) return;
+        if (netGameStarted.Value) return;
+        
+        netGameStarted.Value = true;
+        Debug.Log($"🎮 ИГРА НАЧАЛАСЬ! Игроков: {connectedClients.Count}");
 
-        networkedGameStarted.Value = true;
-        Debug.Log($"🎮 ИГРА НАЧАЛАСЬ! Игроков: {networkedPlayerCount.Value}");
+        // Включаем всех игроков одновременно
+        foreach (var kvp in playerObjects)
+        {
+            if (kvp.Value != null)
+            {
+                SetPlayerActive(kvp.Value, true);
+                Debug.Log($"✅ Игрок {kvp.Key} активирован!");
+            }
+        }
+    }
+
+    private void SetPlayerActive(NetworkObject playerObject, bool active)
+    {
+        if (playerObject == null) return;
+
+        // Отключаем/включаем визуал и физику
+        var renderers = playerObject.GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers)
+            r.enabled = active;
+
+        var colliders = playerObject.GetComponentsInChildren<Collider>();
+        foreach (var c in colliders)
+            c.enabled = active;
+
+        var rigidbody = playerObject.GetComponent<Rigidbody>();
+        if (rigidbody != null)
+            rigidbody.isKinematic = !active;
+
+        // Отключаем контроллер
+        var controller = playerObject.GetComponent<NetworkPlayerController>();
+        if (controller != null)
+            controller.enabled = active;
     }
 
     // Callbacks для NetworkVariables
-    private void OnPlayerCountChangedCallback(int oldValue, int newValue)
+    private void OnPlayerCountChanged(int oldValue, int newValue)
     {
-        Debug.Log($"Игроков: {newValue}/{minPlayersToStart}");
-        OnPlayerCountChanged?.Invoke(newValue);
         UpdateUI();
     }
 
-    private void OnGameStartedCallback(bool oldValue, bool newValue)
+    private void OnGameStartedChanged(bool oldValue, bool newValue)
     {
-        if (newValue && !localGameStarted)
+        if (newValue)
         {
-            localGameStarted = true;
-            Debug.Log("🎮 Игра началась для этого клиента!");
-            
+            Debug.Log("🎮 Игра началась!");
             HideWaitingScreen();
             OnGameStarted?.Invoke();
         }
+        UpdateUI();
     }
 
     private void OnCountdownChanged(float oldValue, float newValue)
@@ -160,7 +211,7 @@ public class AutoStartGame : NetworkBehaviour
         UpdateUI();
     }
 
-    // UI методы
+    // UI
     private void ShowWaitingScreen()
     {
         if (waitingPanel != null)
@@ -175,40 +226,29 @@ public class AutoStartGame : NetworkBehaviour
 
     private void UpdateUI()
     {
-        // Статус
         if (waitingStatusText != null)
         {
-            if (networkedGameStarted.Value)
-            {
+            if (netGameStarted.Value)
                 waitingStatusText.text = "Игра началась!";
-            }
-            else if (networkedCountdown.Value > 0)
-            {
+            else if (netCountdown.Value > 0)
                 waitingStatusText.text = "Игра скоро начнётся!";
-            }
-            else if (networkedPlayerCount.Value < minPlayersToStart)
-            {
+            else if (netPlayerCount.Value < minPlayersToStart)
                 waitingStatusText.text = "Ожидание игроков...";
-            }
             else
-            {
                 waitingStatusText.text = "Готово!";
-            }
         }
 
-        // Счётчик игроков
         if (playerCountText != null)
         {
-            playerCountText.text = $"Игроков: {networkedPlayerCount.Value}/{minPlayersToStart}";
+            playerCountText.text = $"Игроков: {netPlayerCount.Value}/{minPlayersToStart}";
         }
 
-        // Обратный отсчёт
         if (countdownText != null)
         {
-            if (networkedCountdown.Value > 0)
+            if (netCountdown.Value > 0)
             {
                 countdownText.gameObject.SetActive(true);
-                countdownText.text = Mathf.CeilToInt(networkedCountdown.Value).ToString();
+                countdownText.text = Mathf.CeilToInt(netCountdown.Value).ToString();
             }
             else
             {
@@ -217,11 +257,6 @@ public class AutoStartGame : NetworkBehaviour
         }
     }
 
-    // Публичные методы
-    public bool IsGameStarted() => networkedGameStarted.Value;
-    public int GetConnectedPlayers() => networkedPlayerCount.Value;
-    public int GetMinPlayersRequired() => minPlayersToStart;
-    public bool IsWaitingForPlayers() => !networkedGameStarted.Value && networkedPlayerCount.Value < minPlayersToStart;
+    public bool IsGameStarted() => netGameStarted.Value;
+    public int GetConnectedPlayers() => netPlayerCount.Value;
 }
-
-

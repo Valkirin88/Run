@@ -15,31 +15,20 @@ using Lobby = Unity.Services.Lobbies.Models.Lobby;
 /// </summary>
 public class AutoMatchmaking : MonoBehaviour
 {
-    public static AutoMatchmaking Instance { get; private set; }
+    [Header("References")]
+    [SerializeField] private NetworkRelayManager relayManager;
 
     [Header("Settings")]
     [SerializeField] private int maxPlayersPerLobby = 4;
     [SerializeField] private float lobbyUpdateInterval = 1.5f;
-    [SerializeField] private string gameMode = "FreeForAll"; // Можно менять для разных режимов
+    [SerializeField] private string gameMode = "FreeForAll";
 
-    // Events
     public event Action<string> OnStatusChanged;
     public event Action<int> OnPlayerCountChanged;
 
     private Lobby currentLobby;
     private bool isSearching = false;
     private float lastLobbyUpdate;
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     private async void Start()
     {
@@ -215,7 +204,7 @@ public class AutoMatchmaking : MonoBehaviour
             Debug.Log($"Лобби создано: {currentLobby.Id}");
 
             // Создаем Relay allocation
-            string joinCode = await NetworkRelayManager.Instance.CreateRelay();
+            string joinCode = await relayManager.CreateRelay();
 
             if (!string.IsNullOrEmpty(joinCode))
             {
@@ -268,7 +257,7 @@ public class AutoMatchmaking : MonoBehaviour
                 string relayJoinCode = relayCodeObj.Value;
                 Debug.Log($"🔑 Получен RelayJoinCode: {relayJoinCode}");
                 
-                bool success = await NetworkRelayManager.Instance.JoinRelay(relayJoinCode);
+                bool success = await relayManager.JoinRelay(relayJoinCode);
 
                 if (success)
                 {

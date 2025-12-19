@@ -7,7 +7,6 @@ public class NetworkPlayerController : NetworkBehaviour
     
     private InputController _inputController;
     private RunnerController _runnerController;
-    private bool _controlsEnabled = false;
 
     public override void OnNetworkSpawn()
     {
@@ -17,46 +16,13 @@ public class NetworkPlayerController : NetworkBehaviour
         {
             _inputController = new InputController();
             _runnerController = new RunnerController(_runnerView, _inputController);
-            
-            // Подписываемся на старт игры
-            if (AutoStartGame.Instance != null)
-            {
-                AutoStartGame.Instance.OnGameStarted += EnableControls;
-                
-                // Если игра уже началась - сразу включаем управление
-                if (AutoStartGame.Instance.IsGameStarted())
-                {
-                    EnableControls();
-                }
-                else
-                {
-                    Debug.Log("⏸ Управление отключено - ожидание игроков...");
-                }
-            }
-            else
-            {
-                // Если нет AutoStartGame - управление сразу активно
-                EnableControls();
-            }
-            
-            Debug.Log("Local player spawned and initialized");
+            Debug.Log("✅ Игрок заспавнен и готов к игре!");
         }
-        else
-        {
-            Debug.Log("Remote player spawned");
-        }
-    }
-
-    private void EnableControls()
-    {
-        _controlsEnabled = true;
-        Debug.Log("✅ Управление включено!");
     }
 
     private void Update()
     {
-        // Управление работает только если игра началась
-        if (IsOwner && _inputController != null && _controlsEnabled)
+        if (IsOwner && _inputController != null)
         {
             _inputController.Update();
         }
@@ -66,17 +32,9 @@ public class NetworkPlayerController : NetworkBehaviour
     {
         base.OnNetworkDespawn();
 
-        if (IsOwner)
+        if (IsOwner && _runnerController != null)
         {
-            if (AutoStartGame.Instance != null)
-            {
-                AutoStartGame.Instance.OnGameStarted -= EnableControls;
-            }
-            
-            if (_runnerController != null)
-            {
-                _runnerController.Dispose();
-            }
+            _runnerController.Dispose();
         }
     }
 }
