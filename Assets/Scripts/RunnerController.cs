@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class RunnerController : IDisposable
 {
-    private readonly RunnerView _runnerView;
+    private readonly NetworkRunnerView _runnerView;
     private readonly InputController _inputController;
 
-    public RunnerController(RunnerView runnerView, InputController inputController)
+    public RunnerController(NetworkRunnerView runnerView, InputController inputController)
     {
         _runnerView = runnerView;
         _inputController = inputController;
